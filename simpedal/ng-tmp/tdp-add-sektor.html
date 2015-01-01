@@ -1,0 +1,57 @@
+<style>
+	.w50{
+		width: 46%;
+		padding: 2%;
+		float: left;
+	}
+</style>
+<div class="w50">
+	<table class="pure-table">
+		<tr>
+			<th>ID SEKTOR</th>
+			<th>NAMA SEKTOR</th>
+			<th>ID WARNA</th>
+			<th></th>
+			<th></th>
+		</tr>
+		<tr ng-repeat="item in sektor | orderBy:'ID'">
+			<td>{{item.ID | number}}</td>
+			<td>{{item.NAMA_SEKTOR}}</td>
+			<td><div style="background:{{item.ID_WARNA}};padding:10px;">{{item.ID_WARNA}}</div></td>
+			<td><button class="pure-button" ng-click="change(item)">edit</button></td>
+			<td><form method="post" action="api/hapusSektor">
+				<input type="hidden" name="ID" value="{{item.ID}}">
+				<input type="submit"class="pure-button button-res" value="x">
+				</form>
+			</td>
+		</tr>
+	</table>
+	<h3>ADD SEKTOR </h3>
+	<form class="pure-form" method="post" action="api/addSektor">
+		<input type="hidden" name="ID" value="{{lastId}}">
+		NAMA SEKTOR : <input type="text" name="NAMA_SEKTOR"> ID WARNA : <input type="color" name="ID_WARNA"> <input type="submit" class="pure-button">
+	</form>
+</div>
+<div class="w50" ng-show="edit">
+	<form class="pure-form" method="post" action="api/editSektor">
+	<table>
+		<tr>
+			<td>ID SEKTOR</td>
+			<td><input type="number" name="ID" value="{{aaa.ID}}"></td>
+		</tr>
+		<tr>
+			<td>NAMA SEKTOR</td>
+			<td><input type="text" name="NAMA_SEKTOR" value="{{aaa.NAMA_SEKTOR}}"></td>
+		</tr>
+		<tr>
+			<td>ID WARNA</td>
+			<td><input type="color" name="ID_WARNA" value="{{aaa.ID_WARNA}}"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit"></td>
+		</tr>
+	</table>
+	</form>
+</div>
+<div class="clear"></div>

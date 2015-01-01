@@ -1,0 +1,86 @@
+<a href="#/add"><button ng-show="isAdmin" class="pure-button  button-blue">Tambah Potensi Usaha</button></a>
+<a href="#/editsektor"><button ng-show="isAdmin" class="pure-button  button-blue">Edit Sektor</button></a>
+<br>
+<form class="pure-form">
+	<fieldset>
+		<label for="">Cari Data</label>
+		<select ng-model="cariBy">
+			<option value="NAMA_USAHA" selected="selected">Nama Usaha</option>
+			<option value="KECAMATAN">Kecamatan</option>
+			<option value="KELURAHAN">Kelurahan</option>
+			<option value="NAMA_KEGIATAN">Nama Kegiatan</option>
+			<option value="NAMA_SEKTOR">Nama Sektor</option>
+		</select>   
+		<input type="text" placeholder="keyword" ng-model="key">
+		<input type="submit" value="Cari" ng-click="cari()" class="pure-button">
+	</fieldset>
+</form>
+<table class="tabel pure-table pure-table-horizontal">
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+			<th>NO</th>
+			<th>NO SK</th>
+			<th>TGL SK</th>
+			<th>TGL BERLAKU</th>
+			<th>JENIS PENDAFTARAN</th>
+			<th>NAMA USAHA</th>
+			<th>ALAMAT USAHA</th>
+			<th>KELURAHAN</th>
+			<th>KECAMATAN</th>
+			<th>TELP</th>
+			<th>PEMILIK</th>
+			<th>KEGIATAN</th>
+			<th>MODAL</th>
+			<th>TENAGA KERJA</th>
+			<th>FASILITAS</th>
+			<th>KETERANGAN</th>
+			<th>KOORDINAT</th>
+			<th>SEKTOR</th>
+			<th>ID WARNA</th>
+			<th>FOTO 1</th>
+			<th>FOTO 2</th>
+			<th>FOTO 3</th>
+			<th>FOTO 4</th>
+		</tr>
+	</thead>
+	<tbody>
+
+		<tr class="loading" ng-show="loading">
+			<td>loading</td>
+		</tr>
+		<tr ng-repeat="item in tdp | startFrom:currentPage*pageSize | limitTo:pageSize">
+			<td><a ng-show="isAdmin" href="#/tdp/edit/{{item.NO}}"><button class="pure-button">Edit</button></a></td>
+			<td><a ng-click="keMap(item.KOORDINAT, item.NO, item.ID_WARNA)"><button class="pure-button">Ke Map</button></a></td>
+			<td>{{item.NO}}</td>
+			<td>{{item.NO_SK}}</td>
+			<td>{{item.TGL_SK}}</td>
+			<td>{{item.TGL_BERLAKU}}</td>
+			<td>{{item.JENIS_PENDAFTARAN}}</td>
+			<td>{{item.NAMA_USAHA}}</td>
+			<td>{{item.ALAMAT_USAHA}}</td>
+			<td>{{item.KELURAHAN}}</td>
+			<td>{{item.KECAMATAN}}</td>
+			<td>{{item.TELP}}</td>
+			<td>{{item.PEMILIK}}</td>
+			<td>{{item.NOMENKLATUR}} | {{item.NAMA_KEGIATAN}}</td>
+			<td>{{item.MODAL}}</td>
+			<td>{{item.TENAGA_KERJA}}</td>
+			<td>{{item.FASILITAS}}</td>
+			<td>{{item.KETERANGAN}}</td>
+			<td><a ng-click="keMap(item.KOORDINAT)">{{item.KOORDINAT}}</a></td>
+			<td>{{item.NAMA_SEKTOR}}</td>
+			<td><div style="background:{{item.ID_WARNA}};padding:10px;">{{item.ID_WARNA}}</div></td>
+			<td>{{item.FOTO_1}}</td>
+			<td>{{item.FOTO_2}}</td>
+			<td>{{item.FOTO_3}}</td>
+			<td>{{item.FOTO_4}}</td>
+		</tr>
+	</tbody>
+</table>
+
+<div class="adah-button">
+	<button class="pure-button" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">Prev</button>
+	<button class="pure-button" ng-disabled="currentPage >= tdp.length/pageSize - 1" ng-click="currentPage=currentPage+1">Next</button>
+</div>

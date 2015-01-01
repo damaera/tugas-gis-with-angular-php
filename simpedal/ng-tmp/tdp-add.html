@@ -1,0 +1,103 @@
+<form class="pure-form" enctype="multipart/form-data" method="post" action="api/add">
+	<table>
+		<tr>
+			<td>Nomer SK</td>
+			<td><input type="text" name="NO_SK"></td>
+		</tr>
+		<tr>
+			<td>Tanggal SK</td>
+			<td><input type="date" name="TGL_SK"></td>
+		</tr>
+		<tr>
+			<td>Tanggal Berlaku</td>
+			<td><input type="date" name="TGL_BERLAKU"></td>
+		</tr>
+		<tr>
+			<td>Jenis Pendaftaran</td>
+			<td><input type="text" name="JENIS_PENDAFTARAN"></td>
+		</tr>
+		<tr>
+			<td>Nama Usaha</td>
+			<td><input type="text" name="NAMA_USAHA"></td>
+		</tr>
+		<tr>
+			<td>Alamat Usaha</td>
+			<td><input type="text" name="ALAMAT_USAHA"></td>
+		</tr>
+		<tr>
+			<td>Kelurahan</td>
+			<td><input type="text" name="KELURAHAN"></td>
+		</tr>
+		<tr>
+			<td>Kecamatan</td>
+			<td><input type="text" name="KECAMATAN"></td>
+		</tr>
+		<tr>
+			<td>Telp</td>
+			<td><input type="text" name="TELP"></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>Pemilik</td>
+			<td><input type="text" name="PEMILIK"></td>
+		</tr>
+		<tr>
+			<td>Modal</td>
+			<td><input type="number" name="MODAL"></td>
+		</tr>
+		<tr>
+			<td>Kegiatan</td>
+			<td>
+				<select name="KEGIATAN">
+					<option ng-repeat="item in jenis" value="{{item.NOMENKLATUR}}">{{item.NOMENKLATUR}} | {{item.NAMA_KEGIATAN}}</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Tenaga Kerja</td>
+			<td><input type="text" name="TENAGA_KERJA"></td>
+		</tr>
+		<tr>
+			<td>Fasilitas</td>
+			<td><input type="text" name="FASILITAS"></td>
+		</tr>
+		<tr>
+			<td>Koordinat</td>
+			<td><input type="text" name="KOORDINAT"></td>
+		</tr>
+		<tr>
+			<td>Sektor</td>
+			<td>
+				<select name="ID_SEKTOR">
+					<option ng-repeat="item in sektor" value="{{item.ID}}">{{item.NAMA_SEKTOR}}</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Keterangan</td>
+			<td><textarea type="text" name="KETERANGAN"></textarea></td>
+		</tr>
+		<tr>
+			<td>Foto1</td>
+			<td><input type="file" name="FOTO_1"></td>
+		</tr>
+		<tr>
+			<td>Foto2</td>
+			<td><input type="file" name="FOTO_2"></td>
+		</tr>
+		<tr>
+			<td>Foto3</td>
+			<td><input type="file" name="FOTO_3"></td>
+		</tr>
+		<tr>
+			<td>Foto4</td>
+			<td><input type="file" name="FOTO_4"></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" class="pure-button"></td>
+		</tr>
+	</table>
+	<div class="clear"></div>	
+</form>

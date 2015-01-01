@@ -1,0 +1,687 @@
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+	<title>Simpedal</title>
+	<link rel="stylesheet" href="css/pure-min.css">
+
+	<link rel="stylesheet" href="css/1.css">
+	
+</head>
+
+
+<body ng-app="Simpedal">
+	<div id="transLogin" ng-hide="sudahLogin">
+		<form class="pure-form">
+			<table>
+				<tr>
+					<td>Username</td>
+					<td><input type="text" ng-model="login.username"></td>
+				</tr>
+				<tr>
+					<td>Password</td>
+					<td><input type="password" ng-model="login.password"></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td><input type="submit" class="pure-button" ng-click="submitlogin()"></td>
+				</tr>
+			</table>		
+		</form>
+	</div>
+	<div id="header" class="pure-menu pure-menu-open pure-menu-horizontal">
+		<ul>
+			<li><a><h2>SIM Penanaman Modal</h2></a></li>
+			<li><a ng-click="reset()" href="#">Beranda</a></li>
+			<li><a ng-click="reset()" href="#tdp">Potensi Usaha</a></li>
+			<li><a ng-click="reset()" href="#laporan" ng-show="isAdmin">Laporan</a></li>
+			<li><a ng-click="reset()" href="#map">Peta</a></li>
+			<li><a ng-click="reset()"><button ng-show="sudahLogin" class="pure-button" ng-click="logout()">logout</button></a></li>
+		</ul>
+		
+	</div>
+	<div id="content" ng-view></div>	
+</body>
+<script src="http://maps.google.com/maps/api/js?sensor=false"></script>
+<script src="js/angular.min.js"></script>
+<script src="js/angular-route.js"></script>
+<script src="http://rawgit.com/allenhwkim/angularjs-google-maps/master/build/scripts/ng-map.min.js"></script>
+<script src="js/angular-file-upload.js"></script>
+<script src="js/angular-storage.js"></script>
+<script src="http://bouil.github.io/angular-google-chart/ng-google-chart.js"></script>
+
+<script>
+var app = angular.module('Simpedal', ['ngRoute', 'LocalStorageModule', 'simpedalController', 'ngMap' , 'angularFileUpload', 'googlechart']);
+
+var simpedalController = angular.module('simpedalController', []);
+
+app.config(['$routeProvider', function ($routeProvider) {
+	$routeProvider
+		.when('/', {
+			templateUrl: 'ng-tmp/home.html',
+		})
+		.when('/tdp' , {
+			templateUrl: 'ng-tmp/tdp.html',
+			controller: 'TdpCtrl'
+		})
+		.when('/map' , {
+			templateUrl: 'ng-tmp/tdp-map.html',
+			controller: 'MapCtrl'
+		})
+		.when('/mapid' , {
+			templateUrl: 'ng-tmp/tdp-map-id.html',
+			controller: 'MapidCtrl'
+		})
+		.when('/tdp/edit/:id' , {
+			templateUrl: 'ng-tmp/tdp-edit.html',
+			controller: 'TdpEditCtrl'
+		})
+		.when('/tdp/:id' , {
+			templateUrl: 'ng-tmp/tdp-id.html',
+			controller: 'TdpIdCtrl'
+		})
+		.when('/laporan',{
+			templateUrl: 'ng-tmp/laporan.html'
+		})
+		.when('/laporan/kegiatan' , {
+			templateUrl: 'ng-tmp/tdp-laporan-kegiatan.html',
+			controller: 'TdpLaporanKegiatanCtrl'
+		})
+		.when('/laporan/kecamatan' , {
+			templateUrl: 'ng-tmp/tdp-laporan-kecamatan.html',
+			controller: 'TdpLaporanKecamatanCtrl'
+		})
+		.when('/laporan/kelurahan' , {
+			templateUrl: 'ng-tmp/tdp-laporan-kelurahan.html',
+			controller: 'TdpLaporanKelurahanCtrl'
+		})
+		.when('/laporan/sektor' , {
+			templateUrl: 'ng-tmp/tdp-laporan-sektor.html',
+			controller: 'TdpLaporanSektorCtrl'
+		})
+		.when('/laporan/sektor2' , {
+			templateUrl: 'ng-tmp/tdp-laporan-sektor2.html',
+			controller: 'TdpLaporanSektor2Ctrl'
+		})
+		.when('/laporan/chart' , {
+			templateUrl: 'ng-tmp/tdp-chart.html',
+			controller: 'chartCtrl'
+		})
+		.when('/laporan/chart2' , {
+			templateUrl: 'ng-tmp/tdp-chart2.html',
+			controller: 'chart2Ctrl'
+		})
+		.when('/add' , {
+			templateUrl: 'ng-tmp/tdp-add.html',
+			controller: 'TdpAddCtrl'
+		})
+		.when('/editsektor' , {
+			templateUrl: 'ng-tmp/tdp-add-sektor.html',
+			controller: 'TdpAddSektorCtrl'
+		})
+		.otherwise({ redirectTo: '/' })
+}]);
+
+app.run(function($rootScope, $location, localStorageService){
+	$rootScope.center = '-7.557167,110.8221234';
+	$rootScope.zoom = 15;
+
+	$rootScope.reset = function () {
+		$rootScope.zoom = 15;
+		$rootScope.center = '-7.557167,110.8221234';
+	}
+
+
+	$rootScope.tdp = {};
+
+	$rootScope.tdpclick = {};
+
+	$rootScope.sudahLogin = false;
+	$rootScope.isAdmin = false;
+
+	if (localStorageService.get('username') == 'admin') {
+		$rootScope.sudahLogin = true;
+		$rootScope.isAdmin = true;
+	}
+	if ($rootScope.sudahLogin == false) {
+		$rootScope.$apply($location.path('/'));
+	};
+
+	$rootScope.submitlogin = function(){
+		if ($rootScope.login.username == 'admin' && $rootScope.login.password == '1234') {
+			$rootScope.sudahLogin = true;
+			$rootScope.isAdmin = true;
+			localStorageService.set('username',$rootScope.login.username);
+			$rootScope.login = {};
+		};
+		if ($rootScope.login.username == 'guest') {
+			$rootScope.sudahLogin = true;
+		};
+	}
+	$rootScope.logout = function(){
+		localStorageService.clearAll();
+		$rootScope.sudahLogin = false;
+		$rootScope.isAdmin = false;
+		$rootScope.$apply($location.path('/'));
+	}
+
+})
+
+app.filter('koordinat' , function() {
+	return function (input) {
+		var hasil = '';
+		if (input[0] == '-') {
+			return input
+		}
+		else{
+
+			var aa = input.replace('S', '-');
+			var bb = aa.replace('E', '');
+			var cc = bb.replace('?', '');
+			var cc = cc.replace('?', '')
+			var dd = cc.replace("'", '');
+			var dd = dd.replace("'", '');
+			var arr = dd.split(' ');
+
+			arr[1] = arr[1]/6+'';
+			arr[1] = arr[1].replace('.','');
+			arr[3] = arr[3]/6+'';
+			arr[3] = arr[3].replace('.','');
+
+			hasil = arr[0]+'.'+arr[1] + ',' +arr[2]+'.'+arr[3];
+
+			return hasil;
+			
+		}
+	}
+});
+
+app.controller('TdpAddCtrl', function($scope , $http) {
+	$http.get('api/tdp/jenis')
+		.then(function(res){
+			$scope.jenis = res.data;
+		});
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			$scope.sektor = res.data;
+		});
+});
+app.controller('TdpAddSektorCtrl', function($scope , $http) {
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			$scope.sektor = res.data;
+			$scope.lastId = $scope.sektor[$scope.sektor.length - 2].ID*1 + 1;
+		});
+
+	$scope.change = function (item){
+		$scope.edit = true;
+		$scope.aaa = item;
+	}
+
+});
+
+app.controller('TdpEditCtrl', function($scope, $routeParams, $http) {
+	$scope.loading = false;
+	var id = $routeParams.id;
+	$http.get('api/tdp/' + id)
+		.then(function(res){
+			$scope.tdp = res.data[0];
+			$scope.loading = false;
+		});
+	$http.get('api/tdp/jenis')
+		.then(function(res){
+			$scope.jenis = res.data;
+		});
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			$scope.sektor = res.data;
+		});
+	$scope.loading = function () {
+		$scope.loading = true;
+	}
+});
+
+app.controller('TdpCtrl', function($scope, $rootScope, $http, $location) {
+	$scope.loading = true;
+
+	$scope.currentPage = 0;
+	$scope.pageSize = 20;
+
+	$http.get('api/tdp/all')
+		.then(function(res){
+			$rootScope.tdp = res.data;
+			$scope.loading = false;
+		});
+
+	$scope.cari = function () {
+		$scope.loading = true;
+
+		$scope.tdp = '';
+
+		var cariBy = $scope.cariBy;
+		var key = $scope.key;
+		var get;
+
+		if (cariBy == undefined || key == undefined) {
+			get = 'api/tdp/all';
+		}
+		else{
+			get = 'api/cari/'+cariBy+'/'+key;
+		}
+		$http.get(get)
+			.then(function(res){
+				$scope.tdp = res.data;
+				$scope.loading = false;
+			});
+	}
+	$scope.keMap = function (koordinat, no, warna) {
+		$rootScope.tdpclick = {
+			id: no,
+			warna: warna
+		}
+		$rootScope.center = koordinat;
+		$rootScope.zoom = 17;
+		$scope.$apply($location.path('/mapid'));
+
+
+	}
+});
+
+app.filter('startFrom', function() {
+	return function(input, start) {
+		start = parseInt(start, 10);
+		return input.slice(start);
+	}
+});
+
+app.controller('TdpLaporanKegiatanCtrl', function($scope, $rootScope, $http) {
+
+	$scope.laporan = [];
+
+	$http.get('api/tdp/jenis')
+		.then(function(res){
+			var aaa = res.data;
+
+			for (var i = 0; i < aaa.length; i++) {
+
+				var jenis = aaa[i].NOMENKLATUR;
+				
+				$http.get('api/laporankegiatan/'+jenis)
+					.then(function(res){
+						if (res.data.length > 0) {
+							var hasil = {
+								'nama': res.data[0].NOMENKLATUR+' - '+res.data[0].NAMA_KEGIATAN,
+								'data': res.data
+							}
+						};
+						$scope.laporan.push(hasil);
+					});
+			};
+		});
+	$scope.exportData = function () {
+		var blob = new Blob([document.getElementById('exportTable').innerHTML], {
+			type: "application/vnd.ms-excel"
+		});
+		saveAs(blob, "laporan-kecamatan.xls");
+	};
+});
+
+app.controller('TdpLaporanKecamatanCtrl', function($scope, $http) {
+	$scope.laporan = [];
+
+	$http.get('api/tdp/kecamatan')
+		.then(function(res){
+			var aaa = res.data;
+
+			for (var i = 0; i < aaa.length; i++) {
+
+				var kecamatan = aaa[i].KECAMATAN;
+				
+				$http.get('api/laporankecamatan/'+kecamatan)
+					.then(function(res){
+						if (res.data.length > 0) {
+							var hasil = {
+								'nama': res.data[0].KECAMATAN,
+								'data': res.data
+							}
+						};
+						$scope.laporan.push(hasil);
+					});
+			};
+		});
+	$scope.exportData = function () {
+		var blob = new Blob([document.getElementById('exportTable').innerHTML], {
+			type: "application/vnd.ms-excel"
+		});
+		saveAs(blob, "laporan-kecamatan.xls");
+	};
+});
+
+app.controller('TdpLaporanKelurahanCtrl', function($scope, $http) {
+	$scope.laporan = [];
+
+	$http.get('api/tdp/kelurahan')
+		.then(function(res){
+			var aaa = res.data;
+
+			for (var i = 0; i < aaa.length; i++) {
+
+				var kelurahan = aaa[i].KELURAHAN;
+				
+				$http.get('api/laporankelurahan/'+kelurahan)
+					.then(function(res){
+						if (res.data.length > 0) {
+							var hasil = {
+								'nama': res.data[0].KELURAHAN,
+								'data': res.data
+							}
+						};
+						$scope.laporan.push(hasil);
+					});
+			};
+		});
+	$scope.exportData = function () {
+		var blob = new Blob([document.getElementById('exportTable').innerHTML], {
+			type: "application/vnd.ms-excel"
+		});
+		saveAs(blob, "laporan-kecamatan.xls");
+	};
+});
+
+app.controller('TdpLaporanSektorCtrl', function($scope, $http) {
+	$scope.laporan = [];
+
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			var aaa = res.data;
+
+			for (var i = 0; i < aaa.length; i++) {
+
+				var sektor = aaa[i].ID;
+				
+				$http.get('api/laporansektor/'+sektor)
+					.then(function(res){
+						if (res.data.length > 0) {
+							var hasil = {
+								'nama': res.data[0].NAMA_SEKTOR,
+								'data': res.data
+							}
+						};
+						$scope.laporan.push(hasil);
+					});
+			};
+		});
+	$scope.exportData = function () {
+		var blob = new Blob([document.getElementById('exportTable').innerHTML], {
+			type: "application/vnd.ms-excel"
+		});
+		saveAs(blob, "laporan-kecamatan.xls");
+	};
+});
+
+app.controller('TdpLaporanSektor2Ctrl', function($scope, $http) {
+	$scope.laporan = [];
+
+	$scope.sektors = [];
+	$scope.kecamatans = [];
+
+	function toLaporan(){
+		for (var i = 0; i < $scope.sektors.length; i++) {
+			var aaa = $scope.sektors[i].ID;
+			for (var j = 0; j < $scope.kecamatans.length; j++) {
+				
+				var bbb = $scope.kecamatans[j].KECAMATAN;
+
+				$http.get('api/laporansektor2/'+$scope.sektors[i].ID+'/'+$scope.kecamatans[j].KECAMATAN)
+					.then(function(res){
+						if (res.data.length > 0) {
+							var hasil = {
+								'nama' : res.data[0].NAMA_SEKTOR + ' - ' + res.data[0].KECAMATAN,
+								'data': res.data
+							}
+							$scope.laporan.push(hasil);
+						};
+					});
+			};
+		};
+	}
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			$scope.sektors = res.data;
+			$http.get('api/tdp/kecamatan')
+				.then(function(res){
+					$scope.kecamatans = res.data;
+					toLaporan();
+				})
+		})
+	$scope.exportData = function () {
+		var blob = new Blob([document.getElementById('exportTable').innerHTML], {
+			type: "application/vnd.ms-excel"
+		});
+		saveAs(blob, "laporan-kecamatan.xls");
+	};
+});
+
+
+app.controller('TdpPageCtrl', function($scope, $routeParams, $http) {
+	var page = $routeParams.page;
+	$http.get('api/tdp/page/' + page)
+		.then(function(res){
+			$scope.tdp = res.data;
+		});
+});
+
+
+app.controller('TdpIdCtrl', function($scope, $rootScope, $routeParams, $http, $location) {
+	var id = $routeParams.id;
+	$http.get('api/tdp/' + id)
+		.then(function(res){
+			$scope.tdp = res.data[0];
+		});
+	$scope.keMap = function (koordinat, no, warna) {
+		$rootScope.tdpclick = {
+			id: no,
+			warna: warna
+		}
+		$rootScope.center = koordinat;
+		$rootScope.zoom = 17;
+		$scope.$apply($location.path('/mapid'));
+
+
+	}
+});
+
+app.controller('MapCtrl', function($scope, $rootScope, $http ,$location) {
+
+	$http.get('api/tdp/kecamatan')
+		.then(function(res){
+			$scope.kecamatan = res.data;
+		});
+
+	$http.get('api/tdp/kelurahan')
+		.then(function(res){
+			$scope.kelurahan = res.data;
+		});
+
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			$scope.sektor = res.data;
+		});
+
+	$http.get('api/tdp/map')
+		.then(function(res){
+			$scope.tdp = res.data;
+		});
+
+	$scope.transhow = false;
+	$scope.toUrl = function (event,aaa) {
+		$scope.transhow = true;
+		$http.get('api/tdp/'+aaa)
+			.then(function(res){
+				$scope.tdpid = res.data[0];
+			});
+	}
+	$scope.transClose = function (){
+		$scope.transhow = false;
+		$scope.tdpid = {};
+
+	}
+	$scope.icon = function (warna) {
+
+		var bentuk = {
+			path: 'm115,121l63,155l55,-160l-58,28l-60,-23z',
+			fillColor: warna,
+			fillOpacity: 0.9,
+			strokeWeight: 1,
+			anchor: new google.maps.Point(190,230)
+		}
+		return bentuk;
+	}
+
+	$scope.hasilText = 'SEMUA';
+
+	var getNama = function(id_sektor){
+		for (var i = 0; i < $scope.sektor.length; i++) {
+			if ($scope.sektor[i].ID == id_sektor) {
+				return $scope.sektor[i].NAMA_SEKTOR;
+			};
+		};
+	}
+
+	$scope.filterTdp = function (by, key) {
+		$scope.hasilText = by + ' ' + key;
+		if (by == 'ID_SEKTOR') {
+			
+			$scope.hasilText = 'SEKTOR ' + getNama(key);
+		};
+		$scope.byKecamatan = $scope.byKelurahan = $scope.bySektor = '';
+		$scope.tdp = [];
+		$http.get('api/tdp/mapcari/'+by+'/'+key)
+			.then(function(res){
+				$scope.tdp = res.data;
+			});
+	}
+});
+app.controller('MapidCtrl', function($scope, $rootScope, $http ,$location) {
+	
+	$scope.toUrl = function (event,aaa) {
+		$scope.$apply( $location.path('/tdp/'+aaa));
+	}
+
+	$scope.icon = function (warna) {
+		var bentuk = {
+			path: 'm115,121l63,155l55,-160l-58,28l-60,-23z',
+			fillColor: warna,
+			fillOpacity: 0.9,
+			scale: 0.2,
+			strokeWeight: 1,
+			anchor: new google.maps.Point(190,230)
+		}
+		return bentuk;
+	}
+});
+
+app.controller('chartCtrl', function($scope, $http) {
+	var chart = [];
+
+	$http.get('api/tdp/sektor')
+		.then(function(res){
+			$scope.sektor = res.data;
+			for (var i = 0; i < $scope.sektor.length; i++) {
+				var aaa = getData($scope.sektor[i].ID);
+				chart[i] = aaa;
+			};
+		});
+
+
+
+	function getData(id_sektor){
+		var name = 'chart'+id_sektor;
+
+		var getNama = function(id_sektor){
+			for (var i = 0; i < $scope.sektor.length; i++) {
+				if ($scope.sektor[i].ID == id_sektor) {
+					return $scope.sektor[i].NAMA_SEKTOR;
+				};
+			};
+		}
+
+		var chart1 = {};
+
+		$http.get('api/chartdata/'+id_sektor)
+			.then(function(res){
+				$scope.tdp = res.data;
+				for (var i = 0; i < $scope.tdp.length; i++) {
+					chart1.data.push($scope.tdp[i]);
+				};
+			});
+
+		chart1.type = "PieChart";
+
+		chart1.data = [
+			['Component', 'cost']
+		];
+		chart1.options = {
+			'title': getNama(id_sektor),
+			displayExactValues: true,
+			width: 800,
+			height: 500,
+			is3D: false,
+			chartArea: {left:100,top:20,bottom:20,right:100,height:"100%"}
+		};
+		return chart1;
+	}
+
+	$scope.chart = chart;
+
+
+});
+
+
+app.controller('chart2Ctrl', function($scope, $http) {
+	var chart = [];
+
+	$http.get('api/tdp/kecamatan')
+		.then(function(res){
+			$scope.kecamatan = res.data;
+			for (var i = 0; i < $scope.kecamatan.length; i++) {
+				var aaa = getData($scope.kecamatan[i].KECAMATAN);
+				chart[i] = aaa;
+			};
+		});
+
+
+
+	function getData(kecamatan){
+		var name = 'chart'+kecamatan;
+
+		var chart1 = {};
+
+		$http.get('api/chartdata2/'+kecamatan)
+			.then(function(res){
+				$scope.tdp = res.data;
+				for (var i = 0; i < $scope.tdp.length; i++) {
+					chart1.data.push($scope.tdp[i]);
+				};
+			});
+
+		chart1.type = "PieChart";
+
+		chart1.data = [
+			['Component', 'cost']
+		];
+		chart1.options = {
+			'title': 'Kecamatan ' + kecamatan,
+			displayExactValues: true,
+			width: 800,
+			height: 500,
+			is3D: false,
+			chartArea: {left:100,top:20,bottom:20,right:100,height:"100%"}
+		};
+		return chart1;
+	}
+
+	$scope.chart = chart;
+
+});
+</script>
+</html>

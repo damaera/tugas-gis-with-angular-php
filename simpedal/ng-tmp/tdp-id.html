@@ -1,0 +1,150 @@
+<a ng-click="keMap(tdp.KOORDINAT, tdp.NO, tdp.ID_WARNA)"><button class="pure-button">Ke Map</button></a>
+<form action="">
+	<table class="pure-table pure-table-bordered">
+		<tr>
+			<td>Nomer SK</td>
+			<td>{{tdp.NO_SK}}</td>
+		</tr>
+		<tr>
+			<td>Tanggal SK</td>
+			<td>{{tdp.TGL_SK}}</td>
+		</tr>
+		<tr>
+			<td>Tanggal Berlaku</td>
+			<td>{{tdp.TGL_BERLAKU}}</td>
+		</tr>
+		<tr>
+			<td>Jenis Pendaftaran</td>
+			<td>{{tdp.JENIS_PENDAFTARAN}}</td>
+		</tr>
+		<tr>
+			<td>Nama Usaha</td>
+			<td>{{tdp.NAMA_USAHA}}</td>
+		</tr>
+		<tr>
+			<td>Alamat Usaha</td>
+			<td>{{tdp.ALAMAT_USAHA}}</td>
+		</tr>
+		<tr>
+			<td>Kelurahan</td>
+			<td>{{tdp.KELURAHAN}}</td>
+		</tr>
+		<tr>
+			<td>Kecamatan</td>
+			<td>{{tdp.KECAMATAN}}</td>
+		</tr>
+		<tr>
+			<td>Telp</td>
+			<td>{{tdp.TELP}}</td>
+		</tr>
+	</table>
+	<table class="pure-table pure-table-bordered">
+		<tr>
+			<td>Pemilik</td>
+			<td>{{tdp.PEMILIK}}</td>
+		</tr>
+		<tr>
+			<td>Modal</td>
+			<td>{{tdp.MODAL}}</td>
+		</tr>
+		<tr>
+			<td>Kegiatan</td>
+			<td>{{tdp.KEGIATAN}}</td>
+		</tr>
+		<tr>
+			<td>Nama Kegiatan</td>
+			<td>{{tdp.NAMA_KEGIATAN}}</td>
+		</tr>
+		<tr>
+			<td>Tenaga Kerja</td>
+			<td>{{tdp.TENAGA_KERJA}}</td>
+		</tr>
+		<tr>
+			<td>Fasilitas</td>
+			<td>{{tdp.FASILITAS}}</td>
+		</tr>
+		<tr>
+			<td>Koordinat</td>
+			<td>{{tdp.KOORDINAT}}</td>
+		</tr>
+		<tr>
+			<td>Sektor</td>
+			<td>{{tdp.NAMA_SEKTOR}}</td>
+		</tr>
+		<tr>
+			<td>ID Warna</td>
+			<td><div style="background:{{tdp.ID_WARNA}};padding:20px;">{{tdp.ID_WARNA}}</div></td>
+		</tr>
+	</table>
+	<table class="pure-table pure-table-bordered" id="alertan">
+		
+		<tr>
+			<td>Foto1</td>
+			<td><img src="asset/{{tdp.FOTO_1}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto2</td>
+			<td><img src="asset/{{tdp.FOTO_2}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto3</td>
+			<td><img src="asset/{{tdp.FOTO_3}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto4</td>
+			<td><img src="asset/{{tdp.FOTO_4}}" alt=""></td>
+		</tr>
+	</table>
+	<script>
+	$(document).ready(function($) {
+		$('#alertan td img').click(function(event) {
+			var gambar = $(this).attr('src');
+			$('.trans').slideDown('fast');
+			$('.konten').html('<img class="gambar" src="'+gambar+'">');
+		});
+		$('.close').click(function(event) {
+			$('.trans').slideUp('fast');
+
+		});
+	});
+	</script>
+	<div class="clear"></div>
+</form>
+<style>
+	.trans{
+		display: none;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		background-color: rgba(0 ,0 ,0,0.3);
+		z-index: 9999;
+		padding: 30px;
+	}
+	.gambar{
+		display: block;
+    	margin-left: auto;
+    	margin-right: auto;
+    	max-width: 100%;
+    	max-height: 100%;
+	}
+	.close{
+		position: absolute;
+		right: 50px;
+		top: 50px;
+		font-size: 15px;
+		padding: 15px;
+		color: #fff;
+		background-color: #850E11;
+		cursor: pointer;
+	}
+	.konten{
+		width: 100%;
+		height: 100%;
+	}
+</style>
+<div class="trans">
+	<div class="konten"></div>
+	<div class="close">close</div>
+</div>

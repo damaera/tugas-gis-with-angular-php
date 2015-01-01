@@ -1,0 +1,63 @@
+<h1>SEKTOR</h1>
+<button class="pure-button" ng-click="exportData()">Export to Excel</button>
+<h3 class="loading" ng-show="loading" align="center">loading</h3>
+<div id="exportTable">
+<div ng-repeat="sektor in laporan | orderBy:'nama'">
+
+<h3>{{sektor.nama}}</h3>
+<table class="tabel pure-table pure-table-horizontal" border="1">
+	<thead>
+		<tr>
+			<th>NO</th>
+			<th>NO SK</th>
+			<th>TGL SK</th>
+			<th>TGL BERLAKU</th>
+			<th>JENIS PENDAFTARAN</th>
+			<th>NAMA USAHA</th>
+			<th>ALAMAT USAHA</th>
+			<th>KELURAHAN</th>
+			<th>KECAMATAN</th>
+			<th>TELP</th>
+			<th>PEMILIK</th>
+			<th>KEGIATAN</th>
+			<th>MODAL</th>
+			<th>TENAGA KERJA</th>
+			<th>FASILITAS</th>
+			<th>KETERANGAN</th>
+			<th>KOORDINAT</th>
+			<th>FOTO 1</th>
+			<th>FOTO 2</th>
+			<th>FOTO 3</th>
+			<th>FOTO 4</th>
+			<th>ID WARNA</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="item in sektor.data">
+			<td>{{item.NO}}</td>
+			<td>{{item.NO_SK}}</td>
+			<td>{{item.TGL_SK}}</td>
+			<td>{{item.TGL_BERLAKU}}</td>
+			<td>{{item.JENIS_PENDAFTARAN}}</td>
+			<td>{{item.NAMA_USAHA}}</td>
+			<td>{{item.ALAMAT_USAHA}}</td>
+			<td>{{item.KELURAHAN}}</td>
+			<td>{{item.KECAMATAN}}</td>
+			<td>{{item.TELP}}</td>
+			<td>{{item.PEMILIK}}</td>
+			<td>{{item.NAMA_KEGIATAN}}</td>
+			<td>{{item.MODAL}}</td>
+			<td>{{item.TENAGA_KERJA}}</td>
+			<td>{{item.FASILITAS}}</td>
+			<td>{{item.KETERANGAN}}</td>
+			<td>{{item.KOORDINAT}}</td>
+			<td>{{item.FOTO_1}}</td>
+			<td>{{item.FOTO_2}}</td>
+			<td>{{item.FOTO_3}}</td>
+			<td>{{item.FOTO_4}}</td>
+			<td><div style="background:{{item.ID_WARNA}};padding:10px;">{{item.ID_WARNA}}</div></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+</div>

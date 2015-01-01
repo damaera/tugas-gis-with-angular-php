@@ -1,0 +1,163 @@
+<h3>FILTER BY</h3>
+<table>
+	<tr>
+		<td>
+			By kecamatan : <select ng-model="byKecamatan" ng-change="filterTdp('KECAMATAN', byKecamatan)" ng-options="c.KECAMATAN as c.KECAMATAN for c in kecamatan"></select>
+		</td>
+		<td>
+			By Kelurahan : <select ng-model="byKelurahan" ng-change="filterTdp('KELURAHAN', byKelurahan)" ng-options="c.KELURAHAN as c.KELURAHAN for c in kelurahan"></select>
+		</td>
+		<td>
+			By Sektor : <select ng-model="bySektor" ng-change="filterTdp('ID_SEKTOR', bySektor)" ng-options="c.ID as c.NAMA_SEKTOR for c in sektor"></select>
+		</td>
+	</tr>
+</table>
+<div id="exportTable">
+<h3>{{hasilText}}</h3>
+</div>
+
+
+<map center="[{{center | koordinat}}]" zoom="{{zoom}}">
+	<!-- <shape ng-repeat="item in tdp" name="circle" radius="20" center="[{{item.KOORDINAT | koordinat}}]" stroke-color="{{item.ID_WARNA}}"/> -->
+	<marker position="{{item.KOORDINAT | koordinat}}" ng-repeat="item in tdp" on-click="toUrl({{item.NO}})"></marker>
+	<!-- <marker ng-repeat="item in tdp" position="{{item.KOORDINAT | koordinat}}" on-click="toUrl({{item.NO}})" icon="{
+    	path: 'M 125,5 155,90 245,90 175,145 200,230 125,180 50,230 75,145 5,90 95,90 z',
+        fillColor: '{{item.ID_WARNA}}',
+        fillOpacity: 0.8,
+        scale: 0.1,
+        strokeColor: '#222',
+        strokeWeight: 1
+      }">
+	</marker> -->
+</map>
+
+<style>
+td, select{
+	padding: 5px;
+}
+table{
+	width: 100%;
+	margin: 10px 0;
+}
+#trans{
+	width: 100%;
+	background-color: rgba(255,255,255,0.85);
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 9999;
+}
+.tdip{
+	padding: 5%;
+	background-color: #fff;
+	width: 80%;
+	margin: 0 auto;
+}
+button.close{
+	padding: 20px;
+	position: fixed;
+	right: 20px;
+	top: 20px;
+}
+</style>
+
+<div id="trans" ng-show="transhow">
+	<button class="close pure-button button-red" ng-click="transClose()">x</button>
+	<div class="tdip">
+		<table class="pure-table pure-table-bordered">
+		<tr>
+			<td>Nomer SK</td>
+			<td>{{tdpid.NO_SK}}</td>
+		</tr>
+		<tr>
+			<td>Tanggal SK</td>
+			<td>{{tdpid.TGL_SK}}</td>
+		</tr>
+		<tr>
+			<td>Tanggal Berlaku</td>
+			<td>{{tdpid.TGL_BERLAKU}}</td>
+		</tr>
+		<tr>
+			<td>Jenis Pendaftaran</td>
+			<td>{{tdpid.JENIS_PENDAFTARAN}}</td>
+		</tr>
+		<tr>
+			<td>Nama Usaha</td>
+			<td>{{tdpid.NAMA_USAHA}}</td>
+		</tr>
+		<tr>
+			<td>Alamat Usaha</td>
+			<td>{{tdpid.ALAMAT_USAHA}}</td>
+		</tr>
+		<tr>
+			<td>Kelurahan</td>
+			<td>{{tdpid.KELURAHAN}}</td>
+		</tr>
+		<tr>
+			<td>Kecamatan</td>
+			<td>{{tdpid.KECAMATAN}}</td>
+		</tr>
+		<tr>
+			<td>Telp</td>
+			<td>{{tdpid.TELP}}</td>
+		</tr>
+	</table>
+	<table class="pure-table pure-table-bordered">
+		<tr>
+			<td>Pemilik</td>
+			<td>{{tdpid.PEMILIK}}</td>
+		</tr>
+		<tr>
+			<td>Modal</td>
+			<td>{{tdpid.MODAL}}</td>
+		</tr>
+		<tr>
+			<td>Kegiatan</td>
+			<td>{{tdpid.KEGIATAN}}</td>
+		</tr>
+		<tr>
+			<td>Nama Kegiatan</td>
+			<td>{{tdpid.NAMA_KEGIATAN}}</td>
+		</tr>
+		<tr>
+			<td>Tenaga Kerja</td>
+			<td>{{tdpid.TENAGA_KERJA}}</td>
+		</tr>
+		<tr>
+			<td>Fasilitas</td>
+			<td>{{tdpid.FASILITAS}}</td>
+		</tr>
+		<tr>
+			<td>Koordinat</td>
+			<td>{{tdpid.KOORDINAT}}</td>
+		</tr>
+		<tr>
+			<td>Sektor</td>
+			<td>{{tdpid.NAMA_SEKTOR}}</td>
+		</tr>
+		<tr>
+			<td>ID Warna</td>
+			<td><div style="background:{{tdpid.ID_WARNA}};padding:20px;">{{tdpid.ID_WARNA}}</div></td>
+		</tr>
+	</table>
+	<table class="pure-table pure-table-bordered" id="alertan">
+		
+		<tr>
+			<td>Foto1</td>
+			<td><img src="asset/{{tdpid.FOTO_1}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto2</td>
+			<td><img src="asset/{{tdpid.FOTO_2}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto3</td>
+			<td><img src="asset/{{tdpid.FOTO_3}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto4</td>
+			<td><img src="asset/{{tdpid.FOTO_4}}" alt=""></td>
+		</tr>
+	</table>
+	</div>
+</div>

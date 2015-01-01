@@ -1,0 +1,119 @@
+<div id="loading" ng-show="loading">
+	<h1>Loading</h1>
+</div>
+<form action="api/tdp/delete" method="post">
+	<table>
+		<input type="hidden" name="NO" value="{{tdp.NO}}">
+		<input type="submit" value="Hapus Data Ini" class="pure-button button-red">
+	</table>
+</form>
+<form class="pure-form" enctype="multipart/form-data" method="post" action="api/tdp/edit" onsubmit="loading()">
+	<table>
+		<input type="hidden" name="NO" value="{{tdp.NO}}">
+		<tr>
+			<td>Nomer SK</td>
+			<td><input type="text" name="NO_SK" value="{{tdp.NO_SK}}"></td>
+		</tr>
+		<tr>
+			<td>Tanggal SK</td>
+			<td><input type="date" name="TGL_SK" value="{{tdp.TGL_SK}}"></td>
+		</tr>
+		<tr>
+			<td>Tanggal Berlaku</td>
+			<td><input type="date" name="TGL_BERLAKU" value="{{tdp.TGL_BERLAKU}}"></td>
+		</tr>
+		<tr>
+			<td>Jenis Pendaftaran</td>
+			<td><input type="text" name="JENIS_PENDAFTARAN" value="{{tdp.JENIS_PENDAFTARAN}}"></td>
+		</tr>
+		<tr>
+			<td>Nama Usaha</td>
+			<td><input type="text" name="NAMA_USAHA" value="{{tdp.NAMA_USAHA}}"></td>
+		</tr>
+		<tr>
+			<td>Alamat Usaha</td>
+			<td><input type="text" name="ALAMAT_USAHA" value="{{tdp.ALAMAT_USAHA}}"></td>
+		</tr>
+		<tr>
+			<td>Kelurahan</td>
+			<td><input type="text" name="KELURAHAN" value="{{tdp.KELURAHAN}}"></td>
+		</tr>
+		<tr>
+			<td>Kecamatan</td>
+			<td><input type="text" name="KECAMATAN" value="{{tdp.KECAMATAN}}"></td>
+		</tr>
+		<tr>
+			<td>Telp</td>
+			<td><input type="text" name="TELP" value="{{tdp.TELP}}"></td>
+		</tr>
+	</table>
+	<table>
+		<tr>
+			<td>Pemilik</td>
+			<td><input type="text" name="PEMILIK" value="{{tdp.PEMILIK}}"></td>
+		</tr>
+		<tr>
+			<td>Modal</td>
+			<td><input type="number" name="MODAL" value="{{tdp.MODAL}}"></td>
+		</tr>
+		<tr>
+			<td>Kegiatan</td>
+			<td>
+				<select name="KEGIATAN">
+					<option ng-repeat="item in jenis" value="{{item.NOMENKLATUR}}">{{item.NOMENKLATUR}} | {{item.NAMA_KEGIATAN}}</option>	
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td>Tenaga Kerja</td>
+			<td><input type="text" name="TENAGA_KERJA" value="{{tdp.TENAGA_KERJA}}"></td>
+		</tr>
+		<tr>
+			<td>Fasilitas</td>
+			<td><input type="text" name="FASILITAS" value="{{tdp.FASILITAS}}"></td>
+		</tr>
+		<tr>
+			<td>Koordinat</td>
+			<td><input type="text" name="KOORDINAT" value="{{tdp.KOORDINAT}}"></td>
+		</tr>
+		<tr>
+			<td>Sektor</td>
+			<td>
+				<select name="ID_SEKTOR">
+					<option ng-repeat="item in sektor" value="{{item.ID}}">{{item.NAMA_SEKTOR}}</option>	
+				</select>
+			</td>
+			<td><div style="background:{{tdp.ID_WARNA}};padding:20px;"></div></td>
+		</tr>
+
+		<tr>
+			<td>Keterangan</td>
+			<td><textarea type="text" name="KETERANGAN">{{tdp.KETERANGAN}}</textarea></td>
+		</tr>
+		<tr>
+			<td>Foto1</td>
+			<td><input type="file" name="FOTO_1" value="{{tdp.FOTO_1}}"></td>
+			<td><img src="asset/{{tdp.FOTO_1}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto2</td>
+			<td><input type="file" name="FOTO_2" value="{{tdp.FOTO_2}}"></td>
+			<td><img src="asset/{{tdp.FOTO_2}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto3</td>
+			<td><input type="file" name="FOTO_3" value="{{tdp.FOTO_3}}"></td>
+			<td><img src="asset/{{tdp.FOTO_3}}" alt=""></td>
+		</tr>
+		<tr>
+			<td>Foto4</td>
+			<td><input type="file" name="FOTO_4" value="{{tdp.FOTO_4}}"></td>
+			<td><img src="asset/{{tdp.FOTO_4}}" alt=""></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" class="pure-button"></td>
+		</tr>
+	</table>
+	<div class="clear"></div>	
+</form>
